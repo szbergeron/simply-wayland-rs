@@ -25,6 +25,7 @@ fn main() {
         .rustified_enum("wl_output_.*")
         .rustified_enum("wl_subcompositor_.*")
         .rustified_enum("wl_subsurface_.*")
+        .generate_comments(true)
         .generate()
         .expect("Unable to generate bindings");
 
