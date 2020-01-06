@@ -12,3 +12,5 @@ license = "MIT"
 
 [build-dependencies]
 bindgen = "0.52.0"
+regex = "1"
+onig = "4.3"
