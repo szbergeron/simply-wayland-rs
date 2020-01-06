@@ -17,18 +17,23 @@ fn main() {
         .output()
         .expect("Couldn't generate un-inlined header");
 
-    std::process::Command::new("sh")
+    std::process::Command::new("bash")
         .arg("-c")
-        .arg("cat output.h > grep -v \"typedef float _Float32\" > output.h")
+        .arg("cat output.h ")
+        .arg("| grep -v \\\"typedef float _Float32;\\\"")
+        .arg("| grep -v \\\"typedef double _Float64;\\\"")
+        .arg("| grep -v \\\"typedef double _Float32x;\\\"")
+        .arg("| grep -v \\\"typedef long double _Float64x;\\\"")
+        .arg(" > stripped.h")
         .output()
         .expect("Couldn't remove bad typedefs");
 
     cc::Build::new()
-        .file("output.h")
+        .file("stripped.h")
         .compile("inlines");
 
     let bindings = bindgen::Builder::default()
-        .header("output.h")
+        .header("stripped.h")
         .parse_callbacks(Box::new(bindgen::CargoCallbacks))
         .whitelist_type("wl.*")
         .whitelist_function("wl.*")
@@ -56,6 +61,7 @@ fn main() {
         .expect("couldn't write bindings");
 
     std::fs::remove_file("output.h").unwrap();
+    std::fs::remove_file("stripped.h").unwrap();
 
     // copy inline functions to separate file to use c2rust
     // match a line starting with `static`, a line starting with `wl_` (function name),
