@@ -17,14 +17,8 @@ fn main() {
         .output()
         .expect("Couldn't generate un-inlined header");
 
-    std::process::Command::new("bash")
-        .arg("-c")
-        .arg("cat output.h ")
-        .arg("| grep -v \\\"typedef float _Float32;\\\"")
-        .arg("| grep -v \\\"typedef double _Float64;\\\"")
-        .arg("| grep -v \\\"typedef double _Float32x;\\\"")
-        .arg("| grep -v \\\"typedef long double _Float64x;\\\"")
-        .arg(" > stripped.h")
+    std::process::Command::new("sh")
+        .arg("./pipe.sh")
         .output()
         .expect("Couldn't remove bad typedefs");
 
