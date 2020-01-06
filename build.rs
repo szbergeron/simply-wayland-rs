@@ -13,9 +13,19 @@ fn main() {
 
     std::process::Command::new("sh")
         .arg("-c")
-        .arg("clang wrapper.h -c -Dstatic= -Dinline= -D__inline= -D__inline__= -E -P -CC > output.h")
+        .arg("clang wrapper.h -c -Dstatic= -Dinline= -D__inline= -D__inline__= -E -P > output.h")
         .output()
         .expect("Couldn't generate un-inlined header");
+
+    std::process::Command::new("sh")
+        .arg("-c")
+        .arg("cat output.h > grep -v \"typedef float _Float32\" > output.h")
+        .output()
+        .expect("Couldn't remove bad typedefs");
+
+    cc::Build::new()
+        .file("output.h")
+        .compile("inlines");
 
     let bindings = bindgen::Builder::default()
         .header("output.h")
