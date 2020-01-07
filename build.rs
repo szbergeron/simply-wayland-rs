@@ -24,7 +24,7 @@ fn main() {
 
     cc::Build::new()
         .file("stripped.h")
-        .compile("inlines");
+        .compile("wlinline");
 
     let bindings = bindgen::Builder::default()
         .header("stripped.h")
@@ -56,6 +56,14 @@ fn main() {
 
     std::fs::remove_file("output.h").unwrap();
     std::fs::remove_file("stripped.h").unwrap();
+
+    //let mut link_loc_directive: String = "cargo:rustc-link-search=native=".to_owned();
+    //link_loc_directive.push_str(env::var("OUT_DIR").unwrap().as_str());
+    println!("cargo:rustc-link-search=native={}/wlinline.a", env::var("OUT_DIR").unwrap());
+    println!("cargo:rustc-link-lib=static=wlinline");
+    //println!(&(String::from("cargo:rustc-link-search=native=") + env::var("OUT_DIR").unwrap())[..]);
+
+    //println!("cargo:rustc-link-lib-static=
 
     // copy inline functions to separate file to use c2rust
     // match a line starting with `static`, a line starting with `wl_` (function name),

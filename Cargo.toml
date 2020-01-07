@@ -1,6 +1,6 @@
 [package]
 name = "simply_wayland"
-version = "0.1.5"
+version = "0.1.6"
 authors = ["Sawyer Bergeron <sawyerbergeron@gmail.com>"]
 edition = "2018"
 description = "Rust bindings for Wayland. Not recommended for general use, likely unidiomatic"
