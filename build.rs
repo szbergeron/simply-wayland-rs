@@ -32,9 +32,10 @@ fn main() {
 
     println!("EVENT: removed bad typedefs");
 
-    cc::Build::new()
+    // removing wlinline for now as dedicated rust wrappers are more ergonomic
+    /*cc::Build::new()
         .file(stripped_path.as_str())
-        .compile("wlinline");
+        .compile("wlinline");*/
 
     println!("EVENT: compiled lib");
 
@@ -71,8 +72,8 @@ fn main() {
 
     //let mut link_loc_directive: String = "cargo:rustc-link-search=native=".to_owned();
     //link_loc_directive.push_str(env::var("OUT_DIR").unwrap().as_str());
-    println!("cargo:rustc-link-search=native={}/wlinline.a", env::var("OUT_DIR").unwrap());
-    println!("cargo:rustc-link-lib=static=wlinline");
+    //println!("cargo:rustc-link-search=native={}/wlinline.a", env::var("OUT_DIR").unwrap());
+    //println!("cargo:rustc-link-lib=static=wlinline");
     //println!(&(String::from("cargo:rustc-link-search=native=") + env::var("OUT_DIR").unwrap())[..]);
 
     //println!("cargo:rustc-link-lib-static=
