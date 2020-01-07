@@ -34,7 +34,7 @@ fn main() {
 
     std::process::Command::new("sh")
         .arg("-c")
-        .arg("./get_include_paths.sh | ./paths_to_contents.sh | ./get_defines.sh >> $OUT_DIR/constants.rs")
+        .arg("./get_include_paths.sh | ./paths_to_contents.sh | ./get_defines.sh > $OUT_DIR/constants.rs")
         .output()
         .expect("Couldn't add const vals");
 
