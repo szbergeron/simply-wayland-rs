@@ -10,24 +10,36 @@ use std::path::PathBuf;
 fn main() {
     println!("cargo:rustc-link-lib=wayland-client");
     println!("cargo:rerun-if-changed=wrapper.h");
+    println!("cargo:rerun-if-changed=build.rs");
+    println!("cargo:rerun-if-changed=path/to/Cargo.lock");
+    println!("cargo:rerun-if-changed=pipe.sh");
+
+    let mut stripped_path = std::env::var("OUT_DIR").unwrap();
+    stripped_path.push_str("/stripped.h");
 
     std::process::Command::new("sh")
         .arg("-c")
-        .arg("clang wrapper.h -c -Dstatic= -Dinline= -D__inline= -D__inline__= -E -P > output.h")
+        .arg("clang wrapper.h -c -Dstatic= -Dinline= -D__inline= -D__inline__= -E -P > $OUT_DIR/output.h")
         .output()
         .expect("Couldn't generate un-inlined header");
+
+    println!("EVENT: compiled wrapper into output");
 
     std::process::Command::new("sh")
         .arg("./pipe.sh")
         .output()
         .expect("Couldn't remove bad typedefs");
 
+    println!("EVENT: removed bad typedefs");
+
     cc::Build::new()
-        .file("stripped.h")
+        .file(stripped_path.as_str())
         .compile("wlinline");
 
+    println!("EVENT: compiled lib");
+
     let bindings = bindgen::Builder::default()
-        .header("stripped.h")
+        .header(stripped_path.as_str())
         .parse_callbacks(Box::new(bindgen::CargoCallbacks))
         .whitelist_type("wl.*")
         .whitelist_function("wl.*")
@@ -54,8 +66,8 @@ fn main() {
         .write_to_file(out_path.join("bindings.rs"))
         .expect("couldn't write bindings");
 
-    std::fs::remove_file("output.h").unwrap();
-    std::fs::remove_file("stripped.h").unwrap();
+    //std::fs::remove_file("output.h").unwrap();
+    //std::fs::remove_file("stripped.h").unwrap();
 
     //let mut link_loc_directive: String = "cargo:rustc-link-search=native=".to_owned();
     //link_loc_directive.push_str(env::var("OUT_DIR").unwrap().as_str());
