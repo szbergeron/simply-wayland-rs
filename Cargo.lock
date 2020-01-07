@@ -262,7 +262,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "simply_wayland"
-version = "0.1.7"
+version = "0.1.8"
 dependencies = [
  "bindgen 0.52.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "cc 1.0.49 (registry+https://github.com/rust-lang/crates.io-index)",

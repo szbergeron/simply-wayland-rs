@@ -32,6 +32,12 @@ fn main() {
 
     println!("EVENT: removed bad typedefs");
 
+    std::process::Command::new("sh")
+        .arg("-c")
+        .arg("./get_include_paths.sh | ./paths_to_contents.sh | ./get_defines.sh >> $OUT_DIR/constants.rs")
+        .output()
+        .expect("Couldn't add const vals");
+
     // removing wlinline for now as dedicated rust wrappers are more ergonomic
     /*cc::Build::new()
         .file(stripped_path.as_str())
@@ -43,9 +49,17 @@ fn main() {
         .header(stripped_path.as_str())
         .parse_callbacks(Box::new(bindgen::CargoCallbacks))
         .whitelist_type("wl.*")
+        .whitelist_type("WL.*")
         .whitelist_function("wl.*")
+        .whitelist_function("WL.*")
         .whitelist_var("wl.*")
-        .whitelist_type(".*WL.*")
+        .whitelist_var("WL.*")
+        //.blacklist_type("__.*")
+        //.blacklist_type("_.*")
+        //.blacklist_function("__.*")
+        //.blacklist_function("_.*")
+        //.blacklist_item("__.*")
+        //.blacklist_item("_.*")
         .rustified_enum("wl_display_error")
         .rustified_enum("wl_shm_.*") // WARN: odd vals, possibly bitmap. Reeval later
         .rustified_enum("wl_data_.*")
