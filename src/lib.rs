@@ -2,5 +2,22 @@
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
 
-include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
-include!(concat!(env!("OUT_DIR"), "/constants.rs"));
+mod helpers;
+
+pub mod wl {
+
+    pub mod core {
+        include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
+        pub use crate::helpers::*;
+    }
+
+    //pub mod extra 
+
+    /*pub mod helper {
+        pub use crate::helpers::*;
+    }*/
+
+    pub mod constants {
+        include!(concat!(env!("OUT_DIR"), "/constants.rs"));
+    }
+}
