@@ -3,12 +3,17 @@
 #![allow(non_snake_case)]
 
 mod helpers;
+mod types;
 
 pub mod wl {
 
     pub mod core {
         include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
         pub use crate::helpers::*;
+    }
+
+    pub mod types {
+        pub use crate::types::*;
     }
 
     //pub mod extra 
